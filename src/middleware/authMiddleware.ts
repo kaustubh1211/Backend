@@ -1,9 +1,7 @@
-import { Request, Response, NextFunction } from "express";
+import {z} from "zod"
 
-
-const loggerMiddleWare =(req:Request , res:Response , next:NextFunction)=>{
-    console.log(`Method: ${req.method}, Path: ${req.path}`);
-    next();
-};
-
-export default loggerMiddleWare;    
+export const registerAuth =  z.object({
+    name:z.string().min(2,"Name must be at least 2 charcters"),
+    email:z.string().email("Invalid email"),
+    password:z.string()
+})

@@ -1,17 +1,19 @@
 import express, { Request, Response } from "express";
 import { registerUser, loginUser } from "../services/authservice";
-import loggerMiddleWare from "../middleware/authMiddleware";
+import  { registerAuth } from "../middleware/authMiddleware";
 import { PrismaClient } from "@prisma/client";
 
 const authRouter = express.Router();
 
 const prisma = new PrismaClient();
-authRouter.use(loggerMiddleWare);
+
 
 authRouter.post("/register", async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    const result = await registerUser(name, email, password);
+
+    const validData= registerAuth.parse(req.body);
+    // const { name, email, password } = req.body;
+    const result = await registerUser(validData);
     res.status(201).json(result);
   } catch (error) {
     res.status(400).json({ "error:": error });
@@ -42,7 +44,7 @@ authRouter.get("/", async (req: Request, res: Response) => {
         take: limit,
       });
 
-      
+
   
       // Get total count of users
       const totalUsers = await prisma.user.count();

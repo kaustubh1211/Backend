@@ -8,18 +8,17 @@ export const addProfile = async (bio: string, userId: number) => {
   });
 };
 
+export const showProfile = async () => {
+  return await prisma.profile.findMany();
+};
 
-export const showProfile = async()=>{
-  return await prisma.profile.findMany()
-}
-
-export const updateProfile=async(id:number , bio:string)=>{
-    return await prisma.profile.update({
-        where:{
-            id
-        },
-        data:{
-            bio
-        }
-    })
-}
+export const updateProfile = async (id: number, bio: string) => {
+  return await prisma.profile.update({
+    where: {
+      id,
+    },
+    data: {
+      bio,
+    },
+  });
+};

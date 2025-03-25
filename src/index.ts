@@ -4,6 +4,7 @@ import profileRouter from "./routes/profileRoute";
 import authRouter from "./routes/authRoute";
 import uploads from "./routes/uploadRoute";
 import { cache , cacheMiddleware } from "./middleware/cacheMiddleware";
+import limiter from "./middleware/ratelimitMiddleware";
 
 const app = express();
 const PORT = 5000;
@@ -11,7 +12,9 @@ const PORT = 5000;
 const path = require("path");
 app.use(express.json());
 
-app.get("/", (req: Request, res: Response) => {
+
+app.use(limiter);
+  app.get("/", (req: Request, res: Response) => {
   res.send("hwllw");
 });
 
