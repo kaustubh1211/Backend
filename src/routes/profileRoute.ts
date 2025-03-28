@@ -4,7 +4,7 @@ import {
   addProfile,
   showProfile,
   updateProfile,
-} from "../services/postservice";
+} from "../services/profileservice";
 const profileRouter = express.Router();
 
 profileRouter.post("/", async (req, res) => {
@@ -38,3 +38,4 @@ profileRouter.put("/update", async (req, res) => {
 
 profileRouter.delete("/");
 export default profileRouter;
+  

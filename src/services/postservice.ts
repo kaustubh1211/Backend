@@ -2,23 +2,45 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const addProfile = async (bio: string, userId: number) => {
-  return await prisma.profile.create({
-    data: { bio, userId },
+export const createPost = async (
+  userId: number,
+  caption: string,
+  image?: string
+) => {
+  if (!userId) {
+    throw new Error("User ID is required to create a post");
+  }
+
+  // Check if user exists
+  const userExists = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!userExists) {
+    throw new Error("User not found");
+  }
+  return await prisma.post.create({
+    data: { caption, image, userId },
   });
 };
 
-export const showProfile = async () => {
-  return await prisma.profile.findMany();
+export const getAllPost = async () => {
+  return await prisma.post.findMany({
+    include: { user: { select: { id: true, name: true } } },
+    orderBy: { createdAt: "desc" },
+  });
 };
 
-export const updateProfile = async (id: number, bio: string) => {
-  return await prisma.profile.update({
-    where: {
-      id,
-    },
-    data: {
-      bio,
-    },
+export const getUserPost = async (userId: number) => {
+  const userExists = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!userExists) {
+    throw new Error("user not found");
+  }
+
+  return await prisma.post.findMany({
+    where: { userId },
   });
 };

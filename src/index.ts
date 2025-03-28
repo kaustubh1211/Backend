@@ -5,6 +5,8 @@ import authRouter from "./routes/authRoute";
 import uploads from "./routes/uploadRoute";
 import { cache , cacheMiddleware } from "./middleware/cacheMiddleware";
 import limiter from "./middleware/ratelimitMiddleware";
+import postRoute from "./routes/postRoute";
+import likeRoute from "./routes/likeRoute";
 
 const app = express();
 const PORT = 5000;
@@ -23,9 +25,13 @@ app.use("/api", authRouter);
 
 app.use("/api/profile", profileRouter);
 
+app.use("/api/posts",postRoute);
+
+app.use("/api/like", likeRoute);
+
 app.use("/api/uploads", uploads);
 
-// ✅ Serve Uploaded Files
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 
