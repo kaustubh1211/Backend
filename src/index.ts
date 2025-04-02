@@ -15,6 +15,7 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import cors from "cors";
 import userSearchRoute from "./routes/usersearchRoute";
+import suggestFriends from "./routes/suggestfriendRoute";
 
 const app = express();
 
@@ -71,6 +72,8 @@ app.use("/api/uploads", uploads);
 app.use("/api/bookmark", bookMarkRoute);
 
 app.use("/api/search", userSearchRoute);
+
+app.use("/api/suggested-friends" , suggestFriends)
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
