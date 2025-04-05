@@ -1,17 +1,15 @@
 import express, { Request, Response } from "express";
-import { registerUser, loginUser } from "../services/authservice";
-import  { registerAuth } from "../middleware/authMiddleware";
+import { registerUser, loginUser, refresh } from "../services/authservice";
+import { registerAuth } from "../middleware/authMiddleware";
 import { PrismaClient } from "@prisma/client";
 
 const authRouter = express.Router();
 
 const prisma = new PrismaClient();
 
-
 authRouter.post("/register", async (req, res) => {
   try {
-
-    const validData= registerAuth.parse(req.body);
+    const validData = registerAuth.parse(req.body);
     // const { name, email, password } = req.body;
     const result = await registerUser(validData);
     res.status(201).json(result);
@@ -30,36 +28,42 @@ authRouter.post("/login", async (req: Request, res: Response) => {
   }
 });
 
+authRouter.post("/refresh", async (req, res) => {
+  try {
+    const { token } = req.body;
+    const result = await refresh(token);
+    res.json(result);
+  } catch (err: any) {
+    res.status(403).json(err.message);
+  }
+});
 
- 
-// pagination route 
+// pagination route
 authRouter.get("/", async (req: Request, res: Response) => {
-    try {
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
-      const skip = (page - 1) * limit; // Calculate how many records to skip
-  
-      const users = await prisma.user.findMany({
-        skip,
-        take: limit,
-      });
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit; // Calculate how many records to skip
 
+    const users = await prisma.user.findMany({
+      skip,
+      take: limit,
+    });
 
-  
-      // Get total count of users
-      const totalUsers = await prisma.user.count();
-  
-      res.json({
-        page,
-        limit,
-        totalUsers,
-        totalPages: Math.ceil(totalUsers / limit),
-        users,
-      });
-    } catch (error) {
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  });
+    // Get total count of users
+    const totalUsers = await prisma.user.count();
+
+    res.json({
+      page,
+      limit,
+      totalUsers,
+      totalPages: Math.ceil(totalUsers / limit),
+      users,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 // export const login = async (req: Request, res: Response) => {
 //   try {
