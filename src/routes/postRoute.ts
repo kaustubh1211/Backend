@@ -9,7 +9,7 @@ postRoute.post("/", async (req, res) => {
     const post = await createPost(userId, caption, image);
     res.status(200).json(post);
   } catch (e) {
-    res.status(400).json(`error` + e);
+     res.status(400).json(`error` + e);
   }
 });
 

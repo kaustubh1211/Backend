@@ -29,6 +29,8 @@ model User {
 
   profile   Profile?
   role      String     @default("user")
+  resetOtp  String?
+  otpExpire DateTime?
   posts     Post[]
   like      Like[]
   followers Follow[]   @relation(name: "FollowingRelation")

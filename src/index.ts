@@ -16,11 +16,14 @@ import { createServer } from "http";
 import cors from "cors";
 import userSearchRoute from "./routes/usersearchRoute";
 import suggestFriends from "./routes/suggestfriendRoute";
+import trandingPost from "./routes/trandingpostRoute";
+import emailRouter from "./routes/emailRoute";
+import otpRoute from "./routes/otpRoute";
 
 const app = express();
 
 const server = createServer(app);
-const PORT = 5000;
+const PORT = 6000;
 
 const path = require("path");
 app.use(express.json());
@@ -65,7 +68,7 @@ app.use("/api/follow", followRoute);
 
 app.use("/api/comment", commentRoute);
 
-app.use("/api /feed", feedRoute);
+app.use("/api/feed", feedRoute);
 
 app.use("/api/uploads", uploads);
 
@@ -73,7 +76,13 @@ app.use("/api/bookmark", bookMarkRoute);
 
 app.use("/api/search", userSearchRoute);
 
-app.use("/api/suggested-friends" , suggestFriends)
+app.use("/api/suggested-friends" , suggestFriends);
+
+app.use("/api/tranding-post", trandingPost );
+
+app.use("/api/send-email", emailRouter);
+
+app.use("/api/auth",  otpRoute);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
