@@ -37,6 +37,12 @@ model User {
   following    Follow[]   @relation(name: "FollowerRelation")
   comment      Comment[]
   bookmark     Bookmark[]
+
+  Blocker Block[] @relation(name: "BlockerRelation")
+  Blocked Block[] @relation(name: "BlockedRelation")
+  Block   Block[]
+
+  History History[]
 }
 
 model Like {
@@ -60,6 +66,7 @@ model Post {
   like      Like[]
   comment   Comment[]
   bookmar   Bookmark[]
+  History  History[]
 }
 
 model Follow {
@@ -97,6 +104,31 @@ model Bookmark {
 
   user User @relation(fields: [userId], references: [id], map: "Bookmark_userId_fkey")
   post Post @relation(fields: [postId], references: [id], map: "Bookmark_postId_fkey")
+
+  @@unique([userId, postId])
+}
+
+model Block {
+  id        Int      @id @default(autoincrement())
+  blocker   User     @relation("BlockerRelation", fields: [blockerId], references: [id])
+  blockerId Int
+  blocked   User     @relation("BlockedRelation", fields: [blockedId], references: [id])
+  blockedId Int
+  createdAt DateTime @default(now())
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+
+  @@unique([blockerId, blockedId])
+}
+
+
+model History {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  viewedAt  DateTime @default(now())
 
   @@unique([userId, postId])
 }

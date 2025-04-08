@@ -19,6 +19,8 @@ import suggestFriends from "./routes/suggestfriendRoute";
 import trandingPost from "./routes/trandingpostRoute";
 import emailRouter from "./routes/emailRoute";
 import otpRoute from "./routes/otpRoute";
+import blockRouter from "./routes/blockRoute";
+import userhistory from "./routes/userhistoryRoute";
 
 const app = express();
 
@@ -82,7 +84,11 @@ app.use("/api/tranding-post", trandingPost );
 
 app.use("/api/send-email", emailRouter);
 
-app.use("/api/auth",  otpRoute);
+app.use("/api/auth",  otpRoute); 
+
+app.use("/api/block" , blockRouter);
+
+app.use("/api/history", userhistory);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
