@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-import router from "./routes/userRoute";
 import profileRouter from "./routes/profileRoute";
 import authRouter from "./routes/authRoute";
 import uploads from "./routes/uploadRoute";
@@ -21,11 +20,15 @@ import emailRouter from "./routes/emailRoute";
 import otpRoute from "./routes/otpRoute";
 import blockRouter from "./routes/blockRoute";
 import userhistory from "./routes/userhistoryRoute";
+import postAnalyasis from "./routes/postAnlaysisRoute";
+import mentionRoute from "./routes/mentionRoute";
+import Chatrouter from "./routes/chatRoute";
+import { handleChatSocket } from "./routes/chatRoute";
 
 const app = express();
 
 const server = createServer(app);
-const PORT = 6000;
+
 
 const path = require("path");
 app.use(express.json());
@@ -45,16 +48,7 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("Client connected:", socket.id);
-
-  socket.on("message", (data) => {
-    console.log("Received message:", data);
-    socket.emit("response", { message: "Message received!" });
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Client disconnected:", socket.id);
-  });
+  handleChatSocket(io, socket);
 });
 
 app.use("/api", authRouter);
@@ -90,6 +84,12 @@ app.use("/api/block" , blockRouter);
 
 app.use("/api/history", userhistory);
 
+app.use("/api/post/analysis" , postAnalyasis);
+
+app.use("/api/mention/search" , mentionRoute);
+
+app.use("/api/chat" ,Chatrouter);
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/data", cacheMiddleware, async (req: Request, res: Response) => {
@@ -102,8 +102,8 @@ app.get("/data", cacheMiddleware, async (req: Request, res: Response) => {
   res.json(data);
 });
 
-server.listen(PORT, () => {
-  console.log(`WebSocket & API server running on http://localhost:${PORT}`);
+server.listen(5000, () => {
+  console.log(`WebSocket & API server running on http://localhost:5000`);
 });
 
 // export {io , server}

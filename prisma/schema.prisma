@@ -43,6 +43,9 @@ model User {
   Block   Block[]
 
   History History[]
+  sender Message[] @relation(name:"Sender")
+  receiver Message[] @relation(name:"Receiver")
+
 }
 
 model Like {
@@ -67,6 +70,8 @@ model Post {
   comment   Comment[]
   bookmar   Bookmark[]
   History  History[]
+  postView  PostView[]
+  share Share[]
 }
 
 model Follow {
@@ -132,3 +137,30 @@ model History {
 
   @@unique([userId, postId])
 }
+
+
+model PostView {
+  id        Int      @id @default(autoincrement())
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  viewedAt  DateTime @default(now())
+}
+
+model Share {
+  id        Int      @id @default(autoincrement())
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  sharedAt  DateTime @default(now())
+}
+
+model Message {
+  id            Int      @id @default(autoincrement())
+  senderId      Int
+  receiverId    Int
+  content       String
+  seen          Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  sender        User     @relation("Sender", fields: [senderId], references: [id])
+  receiver      User     @relation("Receiver", fields: [receiverId], references: [id])
+}
+
