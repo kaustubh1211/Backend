@@ -24,6 +24,8 @@ import postAnalyasis from "./routes/postAnlaysisRoute";
 import mentionRoute from "./routes/mentionRoute";
 import Chatrouter from "./routes/chatRoute";
 import { handleChatSocket } from "./routes/chatRoute";
+import messagehistoryRoute from "./routes/messageHistoryRoute";
+import webhookRoute from "./routes/webhookRoute";
 
 const app = express();
 
@@ -89,6 +91,10 @@ app.use("/api/post/analysis" , postAnalyasis);
 app.use("/api/mention/search" , mentionRoute);
 
 app.use("/api/chat" ,Chatrouter);
+
+// app.use("/api/chat/message" , messagehistoryRoute)
+
+app.use("/api/webhook", webhookRoute);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 

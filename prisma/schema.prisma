@@ -83,7 +83,7 @@ model Follow {
   following   User @relation(name: "FollowingRelation", fields: [followingId], references: [id])
   followingId Int
 
-  @@unique([followerId, followingId]) // Prevent duplicate follows
+  @@unique([followerId, followingId]) 
 }
 
 model Comment {
